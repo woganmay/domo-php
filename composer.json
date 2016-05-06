@@ -1,0 +1,16 @@
+{
+    "name": "woganmay/domo-php",
+    "description": "Use Domo.com APIs with PHP",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "6.2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wogan May",
+            "email": "wogan@amberstone.co"
+        }
+    ],
+    "minimum-stability": "dev"
+}
