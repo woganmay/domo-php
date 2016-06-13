@@ -36,7 +36,7 @@ class DomoPHP {
         if (!file_exists($file))
             throw new \Exception("File not found!");
         
-        $handle = fopen($file);
+        $handle = fopen($file, "r");
         
         $headers = [];
         $columns = [];
