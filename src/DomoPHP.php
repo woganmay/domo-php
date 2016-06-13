@@ -71,10 +71,10 @@ class DomoPHP {
             fclose($handle);
             
             // Create the dataset
-            $dataSet = $this->API->DataSet->create($name, $columns, "");
+            $dataSet = $this->API->DataSet->create($name, $columns);
             
             // Update it
-            $populate = $this->API->DataSet->import($id, $csv);
+            $populate = $this->API->DataSet->import($dataSet->id, $csv);
             
             return $dataSet;
             
