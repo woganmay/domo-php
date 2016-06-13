@@ -130,9 +130,9 @@ class DataSet
      * @param string $sort (Default 'name') The field to sort by
      * @param string $fields (Default 'all') The fields to return in the result
      */
-    public function getList($filter = "", $limit = 10, $offset = 0, $sort = "name", $fields = "all")
+    public function getList($limit = 10, $offset = 0, $sort = "name", $fields = "all")
     {
-        $url = sprintf("/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s&filter=%s", $sort, $fields, $offset, $limit, $filter);
+        $url = sprintf("/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s", $sort, $fields, $offset, $limit);
         return $this->getJSON($url);
     }
     
