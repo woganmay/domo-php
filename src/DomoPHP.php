@@ -60,8 +60,7 @@ class DomoPHP {
                         $columns = $this->inferSchema($headers, $data);
                     
                     // Process the rest of the CSV
-                    foreach($data as $k => $v) $data[$k] = str_replace("'", "\'", $v);
-                    $csv .= "'" . implode("','", $data) . "'\n";
+                    $csv .= '"' . implode('","', $data) . '"' . "\n";
                 }
              
                 $pos++;
