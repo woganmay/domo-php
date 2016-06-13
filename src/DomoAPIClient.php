@@ -3,7 +3,7 @@
 namespace WoganMay\DomoPHP;
 
 /**
- * DomoPHP Client
+ * DomoPHP API Client
  *
  * The DomoPHP client implements a simple object-based way to access the Domo
  * API.
@@ -109,11 +109,18 @@ class DomoAPIClient {
         $this->client_id = $client_id;
         $this->client_secret = $client_secret;
         
-        // The token will be requested at auth time
+        // Function Groups
         $this->DataSet = new DataSet($this);
         
     }
     
+    /**
+     * Get Token
+     * 
+     * Gets and/or refreshes the access token
+     *
+     * @return string An active access token
+     */
     public function getToken()
     {
         // Ensure we have a valid authentication token
@@ -134,88 +141,6 @@ class DomoAPIClient {
         }
         
         return $this->access_token;
-    }
-    
-    public function post($url, $body)
-    {
-        $response = $this->WebClient->post($url, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken()
-            ],
-            'json' => $body
-        ]);
-
-        // Handle server response
-        switch($response->getStatusCode())
-        {
-            case 201:
-                // New resource created, OK
-                return json_decode($response->getBody());
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
-    }
-    
-    public function put($url, $body)
-    {
-        $response = $this->WebClient->put($url, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken()
-            ],
-            'json' => $body
-        ]);
-
-        // Handle server response
-        switch($response->getStatusCode())
-        {
-            case 200:
-                // Resource Updated
-                return json_decode($response->getBody());
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
-    }
-    
-    public function delete($url)
-    {
-        $response = $this->WebClient->delete($url, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken()
-            ]
-        ]);
-
-        // Handle server response
-        switch($response->getStatusCode())
-        {
-            case 204:
-                // Deleted OK
-                return true;
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
-    }
-    
-    public function get($url)
-    {
-        $response = $this->WebClient->get($url, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken()
-            ]
-        ]);
-
-        // Handle server response
-        switch($response->getStatusCode())
-        {
-            case 200:
-                // Got the resource
-                return json_decode($response->getBody());
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
     }
     
 }

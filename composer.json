@@ -1,7 +1,6 @@
 {
     "name": "woganmay/domo-php",
     "description": "Use Domo.com APIs with PHP",
-    "type": "library",
     "require": {
         "guzzlehttp/guzzle": "6.2.0"
     },
@@ -16,6 +15,5 @@
         "psr-4": {
             "WoganMay\\DomoPHP\\": "src/"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
