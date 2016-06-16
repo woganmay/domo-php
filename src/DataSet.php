@@ -3,22 +3,21 @@
 namespace WoganMay\DomoPHP;
 
 /**
- * DomoPHP DataSet
+ * DomoPHP DataSet.
  *
  * Utility methods for working with datasets
- * 
- * @package    DomoPHP
+ *
  * @author     Wogan May <wogan.may@gmail.com>
  * @license    MIT
+ *
  * @link       https://github.com/woganmay/domo-php
  */
-
 class DataSet
 {
-    var $DomoAPIClient = null;
-    
+    public $DomoAPIClient = null;
+
     /**
-     * oAuth Client ID
+     * oAuth Client ID.
      *
      * The Client ID obtained from developer.domo.com
      *
@@ -28,41 +27,40 @@ class DataSet
     {
         $this->DomoAPIClient = $APIClient;
     }
-    
+
     /**
-     * Post JSON to the API
+     * Post JSON to the API.
      *
      * Send an array as JSON, and read the response
      *
-     * @param string $url The relative URL to post to
-     * @param array $body The body array to send
+     * @param string $url  The relative URL to post to
+     * @param array  $body The body array to send
      */
     private function postJSON($url, $body)
     {
         $response = $this->DomoAPIClient->WebClient->post($url, [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken()
+                'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
             ],
-            'json' => $body
+            'json' => $body,
         ]);
 
         // Handle server response
-        switch($response->getStatusCode())
-        {
+        switch ($response->getStatusCode()) {
             case 200: // Request successful
             case 201: // New resource created, OK
-                
+
                 return json_decode($response->getBody());
-                
+
             default:
-                
+
                 // Unknown result code!
                 throw new \Exception($response->getBody());
         }
     }
-    
+
     /**
-     * Post JSON to the API
+     * Post JSON to the API.
      *
      * Send an array as JSON, and read the response
      *
@@ -72,13 +70,12 @@ class DataSet
     {
         $response = $this->DomoAPIClient->WebClient->get($url, [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken()
-            ]
+                'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
+            ],
         ]);
 
         // Handle server response
-        switch($response->getStatusCode())
-        {
+        switch ($response->getStatusCode()) {
             case 200:
                 // Got the resource
                 return json_decode($response->getBody());
@@ -87,68 +84,70 @@ class DataSet
                 throw new \Exception($response->getBody());
         }
     }
-    
+
     /**
-     * Create a new DataSet
+     * Create a new DataSet.
      *
-     * @param string $name The name of the dataset
-     * @param array $columns A list of columns to crate
+     * @param string  $name        The name of the dataset
+     * @param array   $columns     A list of columns to crate
      * @param string? $description An optional description
      */
-    public function create($name, $columns, $description = "")
+    public function create($name, $columns, $description = '')
     {
         // Format for creating a dataset
         $body = [
-            "name" => $name,
-            "description" => $description,
-            "schema" => [
-                "columns" => $columns
-            ]
+            'name'        => $name,
+            'description' => $description,
+            'schema'      => [
+                'columns' => $columns,
+            ],
         ];
-        
-        return $this->postJSON("/v1/datasets", $body);
+
+        return $this->postJSON('/v1/datasets', $body);
     }
-    
+
     /**
-     * Get DataSet Metadata
+     * Get DataSet Metadata.
      *
      * @param string $id The GUID to get metadata for
      */
     public function getMetaData($id = null)
     {
-        if ($id == null)
-            throw new \Exception("ID cannot be null!");
-            
+        if ($id == null) {
+            throw new \Exception('ID cannot be null!');
+        }
+
         return $this->getJSON("/v1/datasets/$id?fields=all");
     }
-    
+
     /**
-     * Get a List of DataSets
+     * Get a List of DataSets.
      *
-     * @param int $limit (Default 10) The number of datasets to return
-     * @param int $limit (Default 0) Used for pagination
-     * @param string $sort (Default 'name') The field to sort by
+     * @param int    $limit  (Default 10) The number of datasets to return
+     * @param int    $limit  (Default 0) Used for pagination
+     * @param string $sort   (Default 'name') The field to sort by
      * @param string $fields (Default 'all') The fields to return in the result
      */
-    public function getList($limit = 10, $offset = 0, $sort = "name", $fields = "all")
+    public function getList($limit = 10, $offset = 0, $sort = 'name', $fields = 'all')
     {
-        $url = sprintf("/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s", $sort, $fields, $offset, $limit);
+        $url = sprintf('/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s', $sort, $fields, $offset, $limit);
+
         return $this->getJSON($url);
     }
-    
+
     /**
-     * Update DataSet Metadata
+     * Update DataSet Metadata.
      *
-     * @param string $id The GUID to update
-     * @param array $update The object to overwrite with
+     * @param string $id     The GUID to update
+     * @param array  $update The object to overwrite with
      */
     public function update($id, $update)
     {
         return $this->DomoAPIClient->put("/v1/datasets/$id", $update);
     }
-    
+
     /**
-     * Delete DataSet
+     * Delete DataSet.
      *
      * @param string $id The GUID to delete
      */
@@ -156,13 +155,12 @@ class DataSet
     {
         $response = $this->DomoAPIClient->WebClient->delete("/v1/datasets/$id", [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken()
-            ]
+                'Authorization' => 'Bearer '.$this->getToken(),
+            ],
         ]);
 
         // Handle server response
-        switch($response->getStatusCode())
-        {
+        switch ($response->getStatusCode()) {
             case 204:
                 // Deleted OK
                 return true;
@@ -171,11 +169,12 @@ class DataSet
                 throw new \Exception($response->getBody());
         }
     }
-    
+
     /**
-     * Export DataSet to CSV
+     * Export DataSet to CSV.
      *
      * @param string $id The GUID to export
+     *
      * @return The CSV
      */
     public function export($id)
@@ -183,43 +182,39 @@ class DataSet
         $response = $this->DomoAPIClient->WebClient->get("/v1/datasets/$id/data", [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
-                'Accept' => 'text/csv'
-            ]
+                'Accept'        => 'text/csv',
+            ],
         ]);
-        
+
         // Handle server response
-        switch($response->getStatusCode())
-        {
+        switch ($response->getStatusCode()) {
             case 200:
                 // CSV Exported
-                return (string)$response->getBody();
+                return (string) $response->getBody();
             default:
                 // Unknown result code!
                 throw new \Exception($response->getBody());
         }
-        
     }
-    
+
     /**
-     * Import CSV to DataSet
+     * Import CSV to DataSet.
      *
-     * @param string $id The GUID to import to
+     * @param string $id  The GUID to import to
      * @param string $csv CSV data to upload
      */
     public function import($id, $csv)
     {
-        
         $response = $this->DomoAPIClient->WebClient->put("/v1/datasets/$id/data", [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
-                'Content-Type' => 'text/csv'
+                'Content-Type'  => 'text/csv',
             ],
-            'body' => $csv
+            'body' => $csv,
         ]);
 
         // Handle server response
-        switch($response->getStatusCode())
-        {
+        switch ($response->getStatusCode()) {
             case 200:
                 // Resource Updated
                 return json_decode($response->getBody());
@@ -228,6 +223,4 @@ class DataSet
                 throw new \Exception($response->getBody());
         }
     }
-    
 }
-    
