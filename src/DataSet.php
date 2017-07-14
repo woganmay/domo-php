@@ -155,7 +155,7 @@ class DataSet
     {
         $response = $this->DomoAPIClient->WebClient->delete("/v1/datasets/$id", [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken(),
+                'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
             ],
         ]);
 
@@ -216,6 +216,7 @@ class DataSet
         // Handle server response
         switch ($response->getStatusCode()) {
             case 200:
+            case 204:
                 // Resource Updated
                 return json_decode($response->getBody());
             default:
