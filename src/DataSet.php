@@ -174,12 +174,13 @@ class DataSet
      * Export DataSet to CSV.
      *
      * @param string $id The GUID to export
+     * @param bool $csvHeaders Include CSV headers
      *
      * @return The CSV
      */
-    public function export($id)
+    public function export($id, bool $csvHeaders = FALSE)
     {
-        $response = $this->DomoAPIClient->WebClient->get("/v1/datasets/$id/data", [
+        $response = $this->DomoAPIClient->WebClient->get("/v1/datasets/$id/data?includeHeader=$csvHeaders", [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->DomoAPIClient->getToken(),
                 'Accept'        => 'text/csv',
