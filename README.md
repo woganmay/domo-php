@@ -30,7 +30,7 @@ These methods let you use the Data API directly, which map more or less exactly 
     $client->API->DataSet->update($id, $update)
     $client->API->DataSet->delete($id)
     $client->API->DataSet->import($id, $csv)
-    $client->API->DataSet->export($id)
+    $client->API->DataSet->export($id, $csvHeaders = FALSE)
     
 There are some shorthand methods being worked on. For the moment:
 
