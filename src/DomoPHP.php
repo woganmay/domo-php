@@ -21,7 +21,7 @@ class DomoPHP
 
     public function __construct($client_id, $client_secret)
     {
-        $this->API = new DomoAPIClient($client_id, $client_secret);
+        $this->API = new Client($client_id, $client_secret);
     }
 
     /**
@@ -29,6 +29,8 @@ class DomoPHP
      *
      * @param string   $name   DataSet Name
      * @param resource $handle An open file handle to the CSV file
+     * @return mixed
+     * @throws \Exception
      */
     public function createDataSet($name, $file)
     {
