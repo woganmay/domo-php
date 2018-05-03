@@ -5,6 +5,8 @@ Services
 DataSets
 --------
 
+This service lets you create, update and delete datasets. You can also import and export data as CSV, though it's advisable to limit this to smaller sets (<50MB). For really big loads you'll want to use the Streams API.
+
 About the Schema
 ~~~~~~~~~~~~~~~~
 
@@ -96,3 +98,59 @@ You can use ``exportDataSet()`` to export the contents of a DataSet as CSV::
     $csv = $client->API->DataSet->exportDataSet($guid, $exportHeaders);
 
 The resulting output can be written straight to a file on disk.
+
+Working with PDP
+~~~~~~~~~~~~~~~~
+
+domo-php includes a set of methods for working with PDP on a dataset:
+
+* ``getPDPList()``
+* ``getDataSetPDP()``
+* ``createDataSetPDP()``
+* ``updateDataSetPDP()``
+* ``deleteDataSetPDP()``
+
+These will be documented in more detail at a later date. It doesn't look like the PDP system is accessible through the Domo UI anymore, so while the API is still creating policies, there's no way to interact with them through the UI anyway.
+
+Groups
+------
+
+Groups are pretty simple - they're just containers that can hold users. There's the option to set a group as the "default" group for new users to join, but that method doesn't seem to work.
+
+Creating and populating a group
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Simple enough to create a group::
+
+    $name = "My Group";
+    $group = $client->API->Group->createGroup($name);
+
+To populate the group, you will need the User IDs of the people you want to add. Users are added one at a time, by sending in the Group ID and the User ID to add::
+
+    $client->API->Group->addUser($group->id, 12345);
+
+Users are removed from groups in a similar way::
+
+    $client->API->Group->removeUser($group->id, 12345);
+
+Renaming a group
+~~~~~~~~~~~~~~~~
+
+To rename a group, you just need its ID::
+
+    $client->API->Group->renameGroup($group->id, "New Name");
+
+Activating and deactivating groups
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to activate or deactivate groups, there are simple methods for that::
+
+    $client->API->Group->activateGroup($group->id);
+    $client->API->Group->deactivateGroup($group->id);
+
+Deleting a group
+~~~~~~~~~~~~~~~~
+
+By deleting a group, it'll be removed from any pages or cards it's associated to. The users in the group won't be affected::
+
+    $client->API->Group->deleteGroup($group->id);

@@ -78,7 +78,6 @@ class Group
      */
     public function activateGroup($id)
     {
-
         $group = $this->getGroup($id);
 
         return $this->Client->putJSON("/v1/groups/$id", [
@@ -94,7 +93,6 @@ class Group
      */
     public function deactivateGroup($id)
     {
-
         $group = $this->getGroup($id);
 
         return $this->Client->putJSON("/v1/groups/$id", [
@@ -111,21 +109,13 @@ class Group
      */
     public function deleteGroup($id)
     {
-
-        $response = $this->Client->WebClient->delete("/v1/groups/$id", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        return $response->getStatusCode() == 204;
-
+        return $this->Client->delete("/v1/groups/$id");
     }
 
     /**
      * @param integer $id Group ID
      * @param integer $user_id User ID to add
-     * @return mixed
+     * @return object
      * @throws \Exception
      */
     public function addUser($id, $user_id)
@@ -135,7 +125,7 @@ class Group
 
     /**
      * @param integer $id The group ID to get users for
-     * @return mxied
+     * @return object
      * @throws \Exception
      */
     public function listUsers($id)
@@ -151,14 +141,7 @@ class Group
      */
     public function removeUser($id, $user_id)
     {
-
-        $response = $this->Client->WebClient->delete("/v1/groups/$id/users/$user_id", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        return $response->getStatusCode() == 204;
+        return $this->Client->delete("/v1/groups/$id/users/$user_id");
     }
 
 
