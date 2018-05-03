@@ -154,3 +154,43 @@ Deleting a group
 By deleting a group, it'll be removed from any pages or cards it's associated to. The users in the group won't be affected::
 
     $client->API->Group->deleteGroup($group->id);
+
+Pages
+-----
+
+This service lets you work with pages and collections.
+
+Creating Pages and Collections
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pages are a lot like Groups - containers for things. Creating them just requires a name::
+
+    $page = $client->API->Page->createPage("Page Name");
+
+You can optionally pass in an array of properties. To nest a page, you'll want a parentId for another page.
+
+To add a new collection to the system, you need the Page ID and the title::
+
+    $collection = $client->API->Page->createPageCollection($page->id, "My Collection");
+
+Populating Pages and Collections
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To assign cards to collections (or the pages they contain), you need to issue an update call with the IDs you want. There's a simple function for pages::
+
+    $client->API->Page->addCard($page->id, $card_id);
+
+To do this for collections, you'll want to do an update:
+
+    $client->API->Page->updatePageCollection($page->id, [ 'cardIds' => [123,456] ]);
+
+The same works for removing cards - just issue updates absent the card IDs you want to remove.
+
+Deleting Pages and Collections
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Deleting pages won't delete the cards themselves. Deleting a parent page won't cascade down to the child pages - they just become orphaned::
+
+    $client->API->Page->deletePage($page->id);
+    $client->API->Page->deletePageCollection($page->id, $collection->id);
+
