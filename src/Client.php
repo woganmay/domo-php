@@ -133,7 +133,7 @@ class Client
      * Sets the list of scopes, validating against the full
      * list that Domo actually supports.
      *
-     * @param $scopes The list of scopes to authorize for
+     * @param array $scopes The list of scopes to authorize for
      */
     private function setScopes($scopes)
     {
@@ -153,7 +153,6 @@ class Client
      * Gets and/or refreshes the access token
      *
      * @return string An active access token
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getToken()
     {
@@ -184,7 +183,7 @@ class Client
      *
      * @param string $url The relative URL to post to
      * @param array $body The body array to send
-     * @return string
+     * @return object
      * @throws \Exception
      */
     public function postJSON($url, $body = null)
@@ -205,6 +204,7 @@ class Client
         switch ($response->getStatusCode()) {
             case 200: // Request successful
             case 201: // New resource created, OK
+            case 204: // HTTP No Content
 
                 return json_decode($response->getBody());
 
@@ -217,7 +217,7 @@ class Client
     /**
      * @param string $url The relative API endpoint to PUT to
      * @param array $body Array of fields to PUT
-     * @return mixed
+     * @return object
      * @throws \Exception
      */
     public function putJSON($url, $body = null)
@@ -255,9 +255,8 @@ class Client
      * Send an array as JSON, and read the response
      *
      * @param string $url The relative URL to get
-     * @return json
+     * @return object
      * @throws \Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getJSON($url)
     {
@@ -276,5 +275,23 @@ class Client
                 // Unknown result code!
                 throw new \Exception($response->getBody());
         }
+    }
+
+    /**
+     * Delete a resource
+     * @param $url URL to DELETE
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete($url)
+    {
+        $response = $this->WebClient->delete($url, [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->Client->getToken(),
+            ],
+        ]);
+
+        // Handle server response
+        return $response->getStatusCode() == 204;
     }
 }

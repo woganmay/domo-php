@@ -27,11 +27,8 @@ class User
         $this->Client = $APIClient;
     }
 
-    public function getUser($id = null)
+    public function getUser($id)
     {
-        if ($id == null)
-            throw new \Exception("Need a valid User ID!");
-
         return $this->Client->getJSON("v1/users/$id?fields=all");
 
     }
@@ -42,7 +39,7 @@ class User
      * @param string $role Admin, Privileged or Participant (default)
      * @param array $additionalFields (title, alternateEmail, phone, location, timezone, locale, employeeNumber)
      * @param bool $sendInvite Send an email invitation
-     * @return \WoganMay\DomoPHP\json The JSON result of the create call
+     * @return object|string
      * @throws \Exception
      */
     public function createUser($name, $email, $role = "Participant", $additionalFields = [], $sendInvite = false)
@@ -72,19 +69,9 @@ class User
      * @return bool Whether the deletion was successful or not
      * @throws \Exception
      */
-    public function deleteUser($id = null)
+    public function deleteUser($id)
     {
-        if ($id == null)
-            throw new \Exception("Need a valid User ID!");
-
-        $result = $this->Client->WebClient->delete("/v1/users/".$id, [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        return $result->getStatusCode() == 204;
-
+        return $this->Client->delete("/v1/users/$id");
     }
 
     /**
@@ -99,23 +86,6 @@ class User
         $url = sprintf('/v1/users?offset=%s&limit=%s', $offset, $limit);
 
         return $this->Client->getJSON($url);
-    }
-
-    /**
-     * @param $input The array of input to validate
-     * @param $required A list of required fields to check for
-     * @return bool Whether or not the array contains all the keys
-     */
-    private function validate($input, $required)
-    {
-        $valid = true;
-
-        foreach($required as $key => $value)
-        {
-            if (!isset($input[$key])) $valid = false;
-        }
-
-        return $valid;
     }
 
 }

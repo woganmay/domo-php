@@ -53,17 +53,13 @@ class DataSet
     /**
      * Get DataSet Metadata.
      *
-     * @param string $id The GUID to get metadata for
-     * @return json
+     * @param string $guid The GUID to get metadata for
+     * @return mixed
      * @throws \Exception
      */
-    public function getDataSet($id = null)
+    public function getDataSet($guid)
     {
-        if ($id == null) {
-            throw new \Exception('ID cannot be null!');
-        }
-
-        return $this->Client->getJSON("/v1/datasets/$id?fields=all");
+        return $this->Client->getJSON("/v1/datasets/$guid?fields=all");
     }
 
     /**

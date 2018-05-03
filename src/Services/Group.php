@@ -46,11 +46,8 @@ class Group
      * @return mixed The Group
      * @throws \Exception
      */
-    public function getGroup($id = null)
+    public function getGroup($id)
     {
-        if ($id == null)
-            throw new \Exception("Need a valid Group ID!");
-
         return $this->Client->getJSON("v1/groups/$id");
     }
 

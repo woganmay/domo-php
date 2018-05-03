@@ -31,11 +31,8 @@ class Page
      * @return mixed
      * @throws \Exception
      */
-    public function getPage($id = null)
+    public function getPage($id)
     {
-        if ($id == null)
-            throw new \Exception("Need a valid Page ID!");
-
         return $this->Client->getJSON("v1/pages/$id");
     }
 
