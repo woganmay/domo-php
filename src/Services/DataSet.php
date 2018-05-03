@@ -63,7 +63,7 @@ class DataSet
             throw new \Exception('ID cannot be null!');
         }
 
-        return $this->client->getJSON("/v1/datasets/$id?fields=all");
+        return $this->Client->getJSON("/v1/datasets/$id?fields=all");
     }
 
     /**
@@ -79,19 +79,19 @@ class DataSet
     {
         $url = sprintf('/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s', $sort, $fields, $offset, $limit);
 
-        return $this->getJSON($url);
+        return $this->Client->getJSON($url);
     }
 
     /**
      * Update DataSet Metadata.
      *
      * @param string $id     The GUID to update
-     * @param array  $update The object to overwrite with
+     * @param array  $update An array of fields to change (name, description, schema)
      * @return json
      */
     public function updateDataSet($id, $update)
     {
-        return $this->Client->put("/v1/datasets/$id", $update);
+        return $this->Client->putJSON("/v1/datasets/$id", $update);
     }
 
     /**
@@ -125,18 +125,17 @@ class DataSet
      * Export DataSet to CSV.
      *
      * @param string $id The GUID to export
-     * @param bool $csvHeaders Include CSV headers
+     * @param bool $header TRUE to include CSV headers (default)
      *
      * @return string The CSV content
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function exportDataSet($id, $csvHeaders = null)
+    public function exportDataSet($id, $header = true)
     {
+        $url = "/v1/datasets/$id/data" . (($header) ? "?includeHeader=true" : "");
 
-        $csvHeaders = ($csvHeaders == null) ? false : true;
-
-        $response = $this->Client->WebClient->get("/v1/datasets/$id/data?includeHeader=$csvHeaders", [
+        $response = $this->Client->WebClient->get($url, [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->Client->getToken(),
                 'Accept'        => 'text/csv',
@@ -173,16 +172,8 @@ class DataSet
             'body' => $csv,
         ]);
 
-        // Handle server response
-        switch ($response->getStatusCode()) {
-            case 200:
-            case 204:
-                // Resource Updated
-                return json_decode($response->getBody());
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
+        return $response->getStatusCode() == 204;
+
     }
 
     /**
