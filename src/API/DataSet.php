@@ -1,6 +1,6 @@
 <?php
 
-namespace WoganMay\DomoPHP\Services;
+namespace WoganMay\DomoPHP\API;
 
 /**
  * DomoPHP DataSet.

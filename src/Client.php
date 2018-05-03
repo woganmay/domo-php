@@ -123,11 +123,11 @@ class Client
         if (!empty($scopes)) $this->setScopes($scopes);
 
         // Services
-        $this->DataSet = new Services\DataSet($this);
-        $this->Group   = new Services\Group($this);
-        $this->User    = new Services\User($this);
-        $this->Page    = new Services\Page($this);
-        $this->Admin   = new Services\Admin($this);
+        $this->DataSet = new API\DataSet($this);
+        $this->Group   = new API\Group($this);
+        $this->User    = new API\User($this);
+        $this->Page    = new API\Page($this);
+        $this->Admin   = new API\Admin($this);
     }
 
     /**

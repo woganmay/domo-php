@@ -23,7 +23,6 @@ class DomoPHP
     public function __construct($client_id, $client_secret)
     {
         $this->API = new Client($client_id, $client_secret);
-
         $this->Helpers = new Helpers\Helpers;
     }
 
