@@ -4,11 +4,7 @@ Overview
 
 The domo-php library is organized into two parts - Services and Helpers. Mostly you'll be using the Services to interact with the API itself. The Helpers streamline some of the more tedious tasks.
 
-This distinction is made in the object structure itself.
-
-.. code-block:: php
-
-   <?php
+This distinction is made in the object structure itself::
 
    $client = new DomoPHP($id, $secret);
 

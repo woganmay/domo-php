@@ -24,11 +24,7 @@ Create a new DataSet
 
 A Domo DataSet consists of the metadata (title, schema, etc), and the records themselves. To create a new dataset, you first need to publish the schema, then follow that with a data import.
 
-This sample uses the Schema Builder to set up a simple dataset.
-
-.. code-block:: php
-
-    <?php
+This sample uses the Schema Builder to set up a simple dataset::
 
     $name = "My First Dataset";
     $description = "An optional description";
