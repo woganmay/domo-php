@@ -1,8 +1,8 @@
 <?php
 
-namespace WoganMay\DomoPHP;
+namespace WoganMay\DomoPHP\Helpers;
 
-class PDPFilterBuilder
+class FilterBuilder
 {
     private $filters;
     private $_column = null;
@@ -10,6 +10,11 @@ class PDPFilterBuilder
     public function __construct()
     {
         $this->filters = [];
+    }
+
+    public function create()
+    {
+        return new self;
     }
 
     public function toArray()

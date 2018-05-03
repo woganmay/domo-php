@@ -1,6 +1,7 @@
 <?php
 
 namespace WoganMay\DomoPHP;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * DomoPHP Client.
@@ -77,6 +78,7 @@ class Client
      */
     public $DataSet;
     public $User;
+    public $Group;
 
     /**
      * Base URL to talk to the API.
@@ -122,6 +124,7 @@ class Client
         // Services
         $this->DataSet = new Services\DataSet($this);
         $this->User    = new Services\User($this);
+        $this->Group   = new Services\Group($this);
     }
 
     /**
@@ -181,13 +184,12 @@ class Client
      * @param array $body The body array to send
      * @return string
      * @throws \Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function postJSON($url, $body)
     {
         $response = $this->WebClient->post($url, [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken(),
+                'Authorization' => 'Bearer ' . $this->getToken(),
             ],
             'json' => $body,
         ]);
@@ -201,24 +203,35 @@ class Client
 
             default:
 
-                // Unknown result code!
                 throw new \Exception($response->getBody());
         }
     }
 
-    public function putJSON($url, $body)
+    /**
+     * @param string $url The relative API endpoint to PUT to
+     * @param array $body Array of fields to PUT
+     * @return mixed
+     * @throws \Exception
+     */
+    public function putJSON($url, $body = null)
     {
-        $response = $this->WebClient->put($url, [
+        $request = [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->getToken(),
-            ],
-            'json' => $body,
-        ]);
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ]
+        ];
+
+        if ($body !== null) $request['json'] = $body;
+
+        $response = $this->WebClient->put($url, $request);
 
         // Handle server response
         switch ($response->getStatusCode()) {
             case 200: // Request successful
             case 201: // New resource created, OK
+            case 204: // No Content (blank PUT or DELETE succeeded)
 
                 return json_decode($response->getBody());
 

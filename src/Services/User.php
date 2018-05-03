@@ -93,7 +93,6 @@ class User
      * @param int $limit (Default 10) The number of users to return
      * @param int $offset (Default 0) Used for pagination
      * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getList($limit = 10, $offset = 0)
     {

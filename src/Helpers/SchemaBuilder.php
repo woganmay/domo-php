@@ -1,8 +1,8 @@
 <?php
 
-namespace WoganMay\DomoPHP;
+namespace WoganMay\DomoPHP\Helpers;
 
-class DataSetSchemaBuilder
+class SchemaBuilder
 {
     private $columns;
 
@@ -58,6 +58,44 @@ class DataSetSchemaBuilder
      */
     public function toArray() {
         return $this->columns;
+    }
+
+    /**
+     * @param $headers The array of headers from the CSV file
+     * @param $record The first record of data
+     * @return array A schema ready for import
+     */
+    public function inferSchema($headers, $record)
+    {
+        $columns = [];
+
+        foreach ($record as $n => $v) {
+            if (is_float($v)) {
+                $type = 'DECIMAL';
+            } elseif (is_float($v)) {
+                $type = 'DOUBLE';
+            } elseif (is_numeric($v)) {
+                $type = 'LONG';
+            } elseif (strtotime($v)) {
+                // It validates as a datetime
+
+                if (strlen($v) <= 10) {
+                    // Too short to include a time
+                    $type = 'DATE';
+                } else {
+                    $type = 'DATETIME';
+                }
+            } else {
+                $type = 'STRING';
+            }
+
+            $columns[] = [
+                'type' => $type,
+                'name' => $headers[$n],
+            ];
+        }
+
+        return $columns;
     }
 
 }
