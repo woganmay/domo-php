@@ -189,7 +189,7 @@ To assign cards to collections (or the pages they contain), you need to issue an
 
     $client->API->Page->addCard($page->id, $card_id);
 
-To do this for collections, you'll want to do an update:
+To do this for collections, you'll want to do an update::
 
     $client->API->Page->updatePageCollection($page->id, [ 'cardIds' => [123,456] ]);
 
@@ -209,7 +209,7 @@ Users
 Getting Users
 ~~~~~~~~~~~~~
 
-Use the ``getList()`` method to fetch existing users:
+Use the ``getList()`` method to fetch existing users::
 
     $limit = 10;
     $offset = 0;
@@ -253,5 +253,4 @@ Deleting Users
 To delete a user, you just need the ID::
 
     $client->API->User->deleteUser(123);
-
 
