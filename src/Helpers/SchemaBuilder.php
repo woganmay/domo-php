@@ -11,6 +11,11 @@ class SchemaBuilder
         $this->columns = [];
     }
 
+    public function create()
+    {
+        return new self;
+    }
+
     /**
      * @param $name Name of the STRING column
      */
