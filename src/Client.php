@@ -79,6 +79,7 @@ class Client
     public $DataSet;
     public $User;
     public $Group;
+    public $Page;
 
     /**
      * Base URL to talk to the API.
@@ -123,8 +124,9 @@ class Client
 
         // Services
         $this->DataSet = new Services\DataSet($this);
-        $this->User    = new Services\User($this);
         $this->Group   = new Services\Group($this);
+        $this->User    = new Services\User($this);
+        $this->Page    = new Services\Page($this);
     }
 
     /**
@@ -185,14 +187,19 @@ class Client
      * @return string
      * @throws \Exception
      */
-    public function postJSON($url, $body)
+    public function postJSON($url, $body = null)
     {
-        $response = $this->WebClient->post($url, [
+        $request = [
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->getToken(),
-            ],
-            'json' => $body,
-        ]);
+                'Authorization' => 'Bearer '.$this->getToken(),
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json'
+            ]
+        ];
+
+        if ($body !== null) $request['json'] = $body;
+
+        $response = $this->WebClient->post($url, $request);
 
         // Handle server response
         switch ($response->getStatusCode()) {
