@@ -2,75 +2,62 @@
 
 namespace WoganMay\DomoPHP;
 
-class PDPFilterBuilder
+class DataSetSchemaBuilder
 {
-    private $filters;
+    private $columns;
 
     public function __construct()
     {
-        $this->filters = [];
-    }
-
-    public function toArray()
-    {
-        // Publish the array
-        return [];
+        $this->columns = [];
     }
 
     /**
-     * @param $camelCase CamelCase string
-     * @return string Underscored string
+     * @param $name Name of the STRING column
      */
-    private function decamelize($camelCase)
-    {
-        return strtoupper(
-            preg_replace(
-                ["/([A-Z]+)/", "/_([A-Z]+)([A-Z][a-z])/"],
-                ["_$1", "_$1_$2"],
-                lcfirst($camelCase)
-            )
-        );
-    }
-
-    public function __call($name, $arguments)
-    {
-
-        $not = substr($name, 0, 3) == "not";
-
-        if ($not)
-        {
-            $operator = substr($name, 3);
-            $operator[0] = strtolower($operator[0]);
-        }
-        else
-        {
-            $operator = $name;
-        }
-
-        $valid_operators = ["equals", "like", "greaterThan", "lessThan",
-                            "greaterThanEqual", "lessThanEqual", "between",
-                            "beginsWith", "endsWith", "contains"];
-
-        if (in_array($operator, $valid_operators, false))
-        {
-            // Stack the operator
-            $this->filters[] = [
-                "operator" => $this->decamelize($operator),
-                "column" => $arguments[0],
-                "values" => $arguments[1],
-                "not" => $not
-            ];
-        }
-
+    public function string($name) {
+        $this->columns[] = [ "name" => $name, "type" => "STRING" ];
     }
 
     /**
-     * @return array The compiled filters
+     * @param $name Name of the DECIMAL column
      */
-    public function render()
-    {
-        return $this->filters;
+    public function decimal($name) {
+        $this->columns[] = [ "name" => $name, "type" => "DECIMAL" ];
     }
 
+    /**
+     * @param $name Name of the LONG column
+     */
+    public function long($name) {
+        $this->columns[] = [ "name" => $name, "type" => "LONG" ];
+    }
+
+    /**
+     * @param $name Name of the DOUBLE column
+     */
+    public function double($name) {
+        $this->columns[] = [ "name" => $name, "type" => "DOUBLE" ];
+    }
+
+    /**
+     * @param $name Name of the DATE column
+     */
+    public function date($name) {
+        $this->columns[] = [ "name" => $name, "type" => "DATE" ];
+    }
+
+    /**
+     * @param $name Name of the DATETIME column
+     */
+    public function datetime($name) {
+        $this->columns[] = [ "name" => $name, "type" => "DATETIME" ];
+    }
+
+    /**
+     * @return array Return the schema array
+     */
+    public function toArray() {
+        return $this->columns;
+    }
 
 }

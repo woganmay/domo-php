@@ -185,20 +185,20 @@ class DataSet
     {
         $url = sprintf('/v1/datasets/%s/policies/%s', $id, $pdp);
 
-        return $this->getJSON($url);
+        return $this->Client->getJSON($url);
     }
 
     /**
      * @param $id string The DataSet GUID to apply the PDP tp
      * @param $name string The name of the PDP
-     * @param $type string The Type (user or system)
+     * @param $type string The Type (open or user)
      * @param $users array The list of User IDs to apply the policy to
      * @param $groups array The list of Group IDs to apply the policy to
      * @param $filters array The filters to apply in the policy
      * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
-    public function createDataSetPDP($id, $name, $filters, $type = "user", $users = [], $groups = [])
+    public function createDataSetPDP($id, $name, $filters, $type = "open", $users = [], $groups = [])
     {
         $body = [
             'name'    => $name,
@@ -206,28 +206,50 @@ class DataSet
             'filters' => $filters
         ];
 
+        if (!empty($users) && !empty($groups)) throw new \Exception("Needs either \$users or \$groups");
+
         if (!empty($users)) $body['users'] = $users;
         if (!empty($groups)) $body['groups'] = $groups;
 
-        return $this->Client->postJSON('/v1/datasets/' . $id, $body);
+        try
+        {
+            return $this->Client->postJSON('/v1/datasets/' . $id . '/policies', $body);
+        }
+        catch(\GuzzleHttp\Exception\ClientException $ex)
+        {
+            throw new \Exception($ex->getMessage());
+        }
+
     }
 
     /**
-     * @param $id The DataSet GUID
-     * @param $pdp The PDP ID
-     * @param $update The array of updates to apply
+     * @param string $id The DataSet GUID
+     * @param integer $pdp The PDP ID
+     * @param string $name The name of the PDP
+     * @param array $filters The array of filters to apply
+     * @param array $users The list of users to apply to
+     * @param array $groups The groups this applies to
      * @return mixed The results of the update request
+     * @throws \Exception
      */
-    public function updateDataSetPDP($id, $pdp, $update)
+    public function updateDataSetPDP($id, $pdp, $name, $filters, $users = [], $groups = [])
     {
-        return $this->Client->put("/v1/datasets/$id/policies/$pdp", $update);
+        $update = [
+            'name' => $name,
+            'filters' => $filters
+        ];
+
+        if (!empty($users)) $update['users'] = $users;
+        if (!empty($groups)) $update['groups'] = $groups;
+
+        return $this->Client->putJSON("/v1/datasets/$id/policies/$pdp", $update);
     }
 
     /**
      * @param $id The GUID of the DataSet
      * @param $pdp The ID of the PDP to remove
      * @return bool Whether the PDP was deleted successfully
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
     public function deleteDataSetPDP($id, $pdp)
     {
@@ -256,7 +278,7 @@ class DataSet
     {
         $url = sprintf('/v1/datasets/%s/policies', $id);
 
-        return $this->getJSON($url);
+        return $this->Client->getJSON($url);
     }
 
 }
