@@ -160,6 +160,15 @@ Pages
 
 This service lets you work with pages and collections.
 
+Getting existing pages
+~~~~~~~~~~~~~~~~~~~~~~
+
+As with every other service, a ``getList()`` method lets you get a paginated list of existing pages::
+
+    $limit = 100; // Maximum: 500
+    $offset = 0;
+    $pages = $client->API->Page->getList($limit, $offset);
+
 Creating Pages and Collections
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -193,4 +202,56 @@ Deleting pages won't delete the cards themselves. Deleting a parent page won't c
 
     $client->API->Page->deletePage($page->id);
     $client->API->Page->deletePageCollection($page->id, $collection->id);
+
+Users
+-----
+
+Getting Users
+~~~~~~~~~~~~~
+
+Use the ``getList()`` method to fetch existing users:
+
+    $limit = 10;
+    $offset = 0;
+    $users = $client->API->User->getList($limit, $offset);
+
+Adding new users
+~~~~~~~~~~~~~~~~
+
+When creating a new user, you need a primary email address (unique in your instance), and you have the option of sending an email invite or not.
+
+You can't use this endpoint to set or change the user's password, so you'll usually want the invite sent. If you don't, the only way to set a password would be to go into the admin panel and use the Reset Password feature (or have the user do a self-service reset).
+
+To create a user with all the defaults::
+
+    $name = "John Doe";
+    $email = "john.doe@example.org";
+    $user = $client->API->User->createUser($name, $email);
+
+That will create a Participant user with no additional attributes, without sending an invite. To do a full-on onboarding::
+
+    $profile = [
+        "title" => "Junior Something",
+        "mobile" => "+18001234567",
+        "employeeNumber" => "007"
+    ];
+    $sendInvite = true;
+    $user = $client->API->User->createUser("Full User", "fulluser@example.org", "Privileged", $profile, $sendInvite);
+
+This creates a user with some prepopulated profile fields, and dispatches an email invite.
+
+Updating Users
+~~~~~~~~~~~~~~
+
+**Important!** There's an oddity with this endpoint. In order to do an incremental update, you need to specify the user's existing email addresses::
+
+    $client->API->User->updateUser(123, "john.doe@example.org", [ "title" => "Senior Something" ]);
+
+Deleting Users
+~~~~~~~~~~~~~~
+
+To delete a user, you just need the ID::
+
+    $client->API->User->deleteUser(123);
+
 
