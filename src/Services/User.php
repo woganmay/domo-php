@@ -30,7 +30,6 @@ class User
     public function getUser($id)
     {
         return $this->Client->getJSON("v1/users/$id?fields=all");
-
     }
 
     /**
@@ -83,9 +82,7 @@ class User
      */
     public function getList($limit = 10, $offset = 0)
     {
-        $url = sprintf('/v1/users?offset=%s&limit=%s', $offset, $limit);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/users?offset=$offset&limit=$limit");
     }
 
 }

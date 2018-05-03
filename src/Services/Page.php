@@ -78,16 +78,11 @@ class Page
     /**
      * @param integer $id The Page ID to delete
      * @return bool
+     * @throws \Exception
      */
     public function deletePage($id)
     {
-        $response = $this->Client->WebClient->delete("/v1/pages/$id", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        return $response->getStatusCode() == 204;
+        return $this->Client->delete("/v1/pages/$id");
     }
 
     /**
@@ -100,9 +95,7 @@ class Page
      */
     public function getList($limit = 10, $offset = 0)
     {
-        $url = sprintf('/v1/pages?offset=%s&limit=%s', $offset, $limit);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/pages?offset=$offset&limit=$limit");
     }
 
     /**
@@ -114,8 +107,7 @@ class Page
      */
     public function getPageCollections($id, $limit = 10, $offset = 0)
     {
-        $url = sprintf('/v1/pages/%s/collections?offset=%s&limit=%s', $id, $offset, $limit);
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/pages/$id/collections?offset=$offset&limit=$limit");
     }
 
     /**
@@ -126,9 +118,7 @@ class Page
      */
     public function createPageCollection($id, $title, $properties = [])
     {
-        $url = sprintf('/v1/pages/%s/collections', $id);
-
-        return $this->Client->postJSON($url, array_merge([
+        return $this->Client->postJSON("/v1/pages/$id/collections", array_merge([
             'title' => $title
         ], $properties));
     }
@@ -148,16 +138,11 @@ class Page
      * @param integer $id The Page ID
      * @param integer $collection_id The Collection ID to remove
      * @return bool
+     * @throws \Exception
      */
     public function deletePageCollection($id, $collection_id)
     {
-        $response = $this->Client->WebClient->delete("/v1/pages/$id/collections/$collection_id", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        return $response->getStatusCode() == 204;
+        return $this->Client->delete("/v1/pages/$id/collections/$collection_id");
     }
 
 
