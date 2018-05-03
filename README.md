@@ -19,9 +19,9 @@ Issues and pull requests accepted, while I work on finishing the next major upda
 | Capability | Service | Documentation |
 | --- | :---: | :---: |
 | DataSets     | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#datasets) |
-| Groups       | Complete | Working |
-| Pages        | Complete | Working |
-| Users        | Complete | Working |
+| Groups       | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#groups) |
+| Pages        | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#pages) |
+| Users        | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#users) |
 | Streams      | Working  | Working |
 | Activity Log | Working  | Working |
 
