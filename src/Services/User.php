@@ -37,42 +37,54 @@ class User
     }
 
     /**
-     * @param $fields array The user to create
+     * @param string $name User's full name
+     * @param string $email User's primary email address
+     * @param string $role Admin, Privileged or Participant (default)
+     * @param array $additionalFields (title, alternateEmail, phone, location, timezone, locale, employeeNumber)
      * @param bool $sendInvite Send an email invitation
      * @return \WoganMay\DomoPHP\json The JSON result of the create call
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      */
-    public function createUser($fields = [], $sendInvite = false)
+    public function createUser($name, $email, $role = "Participant", $additionalFields = [], $sendInvite = false)
     {
-        // Check for required fields
-        if ($this->validate($fields, ['name', 'email', 'role']))
-        {
-            $url = '/v1/users';
-            if ($sendInvite) $url .= "?sendInvite=true";
-            return $this->Client->postJSON($url, $fields);
-        }
-        else
-        {
-            throw new \Exception("Missing one of: name, email, role");
-        }
+        $url = '/v1/users' . (($sendInvite) ? "?sendInvite=true" : '');
 
+        return $this->Client->postJSON($url, array_merge([
+            'name' => $name,
+            'email' => $email,
+            'role' => $role
+        ], $additionalFields));
     }
 
-    public function updateUser($id, $updates = [])
+    /**
+     * @param integer $id The User ID
+     * @param string $email The User's email address
+     * @param array $updates The array of updates to make
+     * @return mixed
+     */
+    public function updateUser($id, $email, $updates = [])
     {
-        return $this->Client->putJSON('/v1/users/'.$id, $updates);
+        return $this->Client->putJSON('/v1/users/'.$id, array_merge([ 'email' => $email ], $updates));
     }
 
+    /**
+     * @param integer $id User ID to delete
+     * @return bool Whether the deletion was successful or not
+     * @throws \Exception
+     */
     public function deleteUser($id = null)
     {
         if ($id == null)
             throw new \Exception("Need a valid User ID!");
 
-        return $this->Client->WebClient->delete("/v1/users/".$id, [
+        $result = $this->Client->WebClient->delete("/v1/users/".$id, [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->Client->getToken(),
             ],
         ]);
+
+        return $result->getStatusCode() == 204;
+
     }
 
     /**
