@@ -47,7 +47,7 @@ class DataSet
             ],
         ];
 
-        return $this->Client->postJSON('/v1/datasets', $body);
+        return $this->Client->postJSON("/v1/datasets", $body);
     }
 
     /**
@@ -66,16 +66,13 @@ class DataSet
      * Get a List of DataSets.
      *
      * @param int    $limit  (Default 10) The number of datasets to return
-     * @param int    $offset  (Default 0) Used for pagination
+     * @param int    $offset (Default 0) Used for pagination
      * @param string $sort   (Default 'name') The field to sort by
-     * @param string $fields (Default 'all') The fields to return in the result
      * @return json
      */
-    public function getList($limit = 10, $offset = 0, $sort = 'name', $fields = 'all')
+    public function getList($limit = 10, $offset = 0, $sort = 'name')
     {
-        $url = sprintf('/v1/datasets?sort=%s&fields=%s&offset=%s&limit=%s', $sort, $fields, $offset, $limit);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/datasets?sort=$sort&fields=all&offset=$offset&limit=$limit");
     }
 
     /**
@@ -96,25 +93,10 @@ class DataSet
      * @param string $id The GUID to delete
      * @return boolean
      * @throws \Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function deleteDataSet($id)
     {
-        $response = $this->Client->WebClient->delete("/v1/datasets/$id", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        // Handle server response
-        switch ($response->getStatusCode()) {
-            case 204:
-                // Deleted OK
-                return true;
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
+        return $this->Client->delete("/v1/datasets/$id");
     }
 
     /**
@@ -169,7 +151,6 @@ class DataSet
         ]);
 
         return $response->getStatusCode() == 204;
-
     }
 
     /**
@@ -179,9 +160,7 @@ class DataSet
      */
     public function getDataSetPDP($id, $pdp)
     {
-        $url = sprintf('/v1/datasets/%s/policies/%s', $id, $pdp);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/datasets/$id/policies/$pdp");
     }
 
     /**
@@ -249,21 +228,7 @@ class DataSet
      */
     public function deleteDataSetPDP($id, $pdp)
     {
-        $response = $this->Client->WebClient->delete("/v1/datasets/$id/policies/$pdp", [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
-            ],
-        ]);
-
-        // Handle server response
-        switch ($response->getStatusCode()) {
-            case 204:
-                // Deleted OK
-                return true;
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
+        return $this->Client->delete("/v1/datasets/$id/policies/$pdp");
     }
 
     /**
@@ -272,9 +237,7 @@ class DataSet
      */
     public function getPDPList($id)
     {
-        $url = sprintf('/v1/datasets/%s/policies', $id);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/datasets/$id/policies");
     }
 
 }

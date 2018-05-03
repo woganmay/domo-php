@@ -36,9 +36,7 @@ class Group
      */
     public function getList($limit = 10, $offset = 0)
     {
-        $url = sprintf('/v1/groups?offset=%s&limit=%s', $offset, $limit);
-
-        return $this->Client->getJSON($url);
+        return $this->Client->getJSON("/v1/groups?offset=$offset&limit=$limit");
     }
 
     /**
@@ -55,7 +53,8 @@ class Group
      * @param $name Group Name
      * @return string
      */
-    public function createGroup($name) {
+    public function createGroup($name)
+    {
         return $this->Client->postJSON('/v1/groups', [ 'name' => $name ]);
     }
 
@@ -64,7 +63,8 @@ class Group
      * @param $name The new name to set
      * @return mixed
      */
-    public function renameGroup($id, $name) {
+    public function renameGroup($id, $name)
+    {
         return $this->Client->putJSON("/v1/groups/$id", [
             'name' => $name,
             'active' => true,
@@ -76,7 +76,8 @@ class Group
      * @param $id The Group ID to activate
      * @return mixed
      */
-    public function activateGroup($id) {
+    public function activateGroup($id)
+    {
 
         $group = $this->getGroup($id);
 
@@ -91,7 +92,8 @@ class Group
      * @param $id The Group ID to activate
      * @return mixed
      */
-    public function deactivateGroup($id) {
+    public function deactivateGroup($id)
+    {
 
         $group = $this->getGroup($id);
 
@@ -107,7 +109,8 @@ class Group
      * @return bool Whether or not the group was deleted
      * @throws \Exception
      */
-    public function deleteGroup($id) {
+    public function deleteGroup($id)
+    {
 
         $response = $this->Client->WebClient->delete("/v1/groups/$id", [
             'headers' => [
@@ -125,7 +128,8 @@ class Group
      * @return mixed
      * @throws \Exception
      */
-    public function addUser($id, $user_id) {
+    public function addUser($id, $user_id)
+    {
         return $this->Client->putJSON("/v1/groups/$id/users/$user_id");
     }
 
@@ -134,12 +138,9 @@ class Group
      * @return mxied
      * @throws \Exception
      */
-    public function listUsers($id) {
-
-        $url = sprintf('/v1/groups/%s/users', $id);
-
-        return $this->Client->getJSON($url);
-
+    public function listUsers($id)
+    {
+        return $this->Client->getJSON("/v1/groups/$id/users");
     }
 
     /**
@@ -148,7 +149,8 @@ class Group
      * @return bool
      * @throws \Exception
      */
-    public function removeUser($id, $user_id) {
+    public function removeUser($id, $user_id)
+    {
 
         $response = $this->Client->WebClient->delete("/v1/groups/$id/users/$user_id", [
             'headers' => [
