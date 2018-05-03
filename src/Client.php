@@ -1,7 +1,6 @@
 <?php
 
 namespace WoganMay\DomoPHP;
-use GuzzleHttp\Exception\ClientException;
 
 /**
  * DomoPHP Client.
@@ -80,6 +79,7 @@ class Client
     public $User;
     public $Group;
     public $Page;
+    public $Admin;
 
     /**
      * Base URL to talk to the API.
@@ -127,6 +127,7 @@ class Client
         $this->Group   = new Services\Group($this);
         $this->User    = new Services\User($this);
         $this->Page    = new Services\Page($this);
+        $this->Admin   = new Services\Admin($this);
     }
 
     /**

@@ -2,6 +2,27 @@
 Services
 ========
 
+Activity Logs
+-------------
+
+The endpoint returns all the activity logs, sorted by event time descending. The basic call to fetch the last 50 events::
+
+    $entries = $client->API->Admin->getActivityLog();
+
+To apply some filters, pass in an array of filters::
+
+    $filters = [
+        "user" => 12345,
+        "start" => "2018-01-01 00:00:00",
+        "end" => "2018-04-01 15:00:00",
+        "limit" => 100,
+        "offset" => 0
+    ];
+
+    $filteredEntries = $client->API->Admin->getActivityLog($filters);
+
+The service will automatically parse ISO timestamps into the epoch format the API needs. Or you can pass in epoch times yourself.
+
 DataSets
 --------
 
