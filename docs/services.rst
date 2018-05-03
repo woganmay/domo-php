@@ -9,7 +9,7 @@ The endpoint returns all the activity logs, sorted by event time descending. The
 
     $entries = $client->API->Admin->getActivityLog();
 
-To apply some filters, pass in an array of filters::
+To filter the results, you've got the following options::
 
     $filters = [
         "user" => 12345,
