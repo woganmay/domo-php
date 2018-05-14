@@ -80,6 +80,7 @@ class Client
     public $Group;
     public $Page;
     public $Admin;
+    public $Stream;
 
     /**
      * Base URL to talk to the API.
@@ -128,6 +129,7 @@ class Client
         $this->User    = new API\User($this);
         $this->Page    = new API\Page($this);
         $this->Admin   = new API\Admin($this);
+        $this->Stream  = new API\Stream($this);
     }
 
     /**
@@ -251,6 +253,37 @@ class Client
     }
 
     /**
+     * @param string $url The URL to PUT to
+     * @param string $csv The CSV content
+     * @return mixed
+     * @throws \Exception
+     */
+    public function putCSV($url, $csv)
+    {
+        $request = [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->getToken(),
+                'Content-Type' => 'text/csv',
+                'Accept' => 'application/json'
+            ],
+            'body' => $csv
+        ];
+
+        $response = $this->WebClient->put($url, $request);
+
+        switch($response->getStatusCode())
+        {
+            case 200: // Request successful
+                return json_decode($response->getBody());
+
+            default:
+                throw new \Exception($response->getBody());
+
+        }
+
+    }
+
+    /**
      * Get JSON from the API
      *
      * Send an array as JSON, and read the response
@@ -288,7 +321,7 @@ class Client
     {
         $response = $this->WebClient->delete($url, [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->Client->getToken(),
+                'Authorization' => 'Bearer '.$this->getToken(),
             ],
         ]);
 
