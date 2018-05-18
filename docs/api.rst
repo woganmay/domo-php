@@ -275,3 +275,148 @@ To delete a user, you just need the ID::
 
     $client->API->User->deleteUser(123);
 
+Streams
+_______
+
+Streams allow you to upload large amounts of data in split, compressed, sequential files. Each upload is handled as a single 'execution' - a stream is started, populated, then committed. In the background, Domo will aggregate all the parts you uploaded and produce a final dataset.
+
+This is the recommended approach for loading really large sets of data. The streams can be created in REPLACE or APPEND mode, depending on your ingestion strategy.
+
+By default, Domo Workbench will load 100'000 rows per upload. It's probably best to follow that guideline with the Streams API.
+
+Listing Streams
+~~~~~~~~~~~~~~~
+
+To get a listing of all the Streams already created::
+
+    $limit = 10;
+    $offset = 0;
+    $client->API->Streams->getList($limit, $offset);
+
+This will return a list (limit and offset parameters are optional).
+
+Getting Streams
+~~~~~~~~~~~~~~~
+
+To get a single Stream, fetch it by numeric ID::
+
+    $stream_id = 123;
+    $stream = $client->API->Streams->getStream($stream_id);
+
+This will return a Stream object, which is composed of the basic Stream metadata, and a description of the DataSet produced by the Stream.
+
+Create a new Stream
+~~~~~~~~~~~~~~~~~~~
+
+Creating a new Stream is a lot like creating a new DataSet - it requires the same information as a DataSet, in addition to an update mode::
+
+    $builder = $client->Helpers->SchemaBuilder->create();
+    $builder->string("Full Name");
+    $builder->double("Salary");
+    $builder->date("Start Date");
+    $columns = $builder->toArray();
+
+    $stream = $client->API->Stream->createStream("Test Dataset", $columns);
+
+This will return the Stream object. Using the ID, you can now start populating the Stream.
+
+Update a Stream
+~~~~~~~~~~~~~~~
+
+The only update you can make to a Stream is to change the update mode (REPLACE or APPEND)::
+
+    $stream_id = 123;
+    $stream = $client->API->Stream->updateStream($stream_id, "APPEND");
+
+On a successful update, the client will return the Stream object.
+
+Delete a Stream
+~~~~~~~~~~~~~~~
+
+Deleting a Stream is straightforward, and will delete the associated DataSet::
+
+    $stream_id = 123;
+    $result = $client->API->Stream->deleteStream($stream_id);
+
+The client will return TRUE on a successful delete.
+
+List Stream Executions
+~~~~~~~~~~~~~~~~~~~~~~
+
+Every time you need to send new data into a Stream, it's managed as an Execution. Executions are created, populated, and committed, or aborted if something went wrong.
+
+To list the existing executions for a single stream::
+
+    $stream_id = 123;
+    $executions = $client->API->Stream->listStreamExecutions($stream_id);
+
+Getting Stream Executions
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To get a single Stream execution::
+
+    $stream_id = 123;
+    $execution_id = 1;
+
+    $execution = $client->API->Stream->getStreamExecution($stream_id, $execution_id);
+
+This will return a single Stream execution.
+
+Create a new Stream Execution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you create a new Execution before committing or aborting an existing Execution, your new execution will obliterate the old one. It's recommended to abort an execution you intend on abandoning.
+
+To create a new Execution::
+
+    $stream_id = 123;
+    $execution = $client->API->Stream->createStreamExecution($stream_id);
+
+This returns a new Execution, which will be automatically set to the update mode of the underlying Stream (REPLACE or APPEND). To change the update mode, you'll need to abort this execution and update the Stream first.
+
+Upload data to an Execution
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Stream already has your data schema (at the point where the Stream was created), so you just need to provide CSV files with the columns in a matching order.
+
+Every file has a Part number (starts at 1) that indicates its position in the Stream. You don't need to declare the total number of parts upfront, but it's important to upload an unbroken sequence::
+
+    // Upload 3 data parts
+    $stream_id = 123;
+    $execution_id = 1;
+
+    $part1 = file_get_contents("part1.csv");
+    $part2 = file_get_contents("part2.csv");
+    $part3 = file_get_contents("part3.csv");
+
+    $part1_result = $client->API->Stream->uploadData($stream_id, $execution_id, 1, $part1);
+    $part2_result = $client->API->Stream->uploadData($stream_id, $execution_id, 2, $part1);
+    $part3_result = $client->API->Stream->uploadData($stream_id, $execution_id, 3, $part1);
+
+Once all the Upload calls are finished, the Stream is ready to be committed.
+
+You can upload the sequence in parallel - so for tools that support it, several upload calls can run at once. Parts can also be re-tried if a single part upload fails.
+
+Commit a Stream Execution
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once all your parts are uploaded, commit the Stream Execution to process them::
+
+    $stream_id = 123;
+    $execution_id = 1;
+
+    $result = $client->API->Stream->commitStreamExecution($stream_id, $execution_id);
+
+Depending on the amount of data uploaded, this could take a few minutes to process. Once the Stream is processed, the resulting Dataset will become available in your Domo Data Center.
+
+Abort a Stream Execution
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to abort a Stream Execution::
+
+    $stream_id = 123;
+    $execution_id = 1;
+
+    $result = $client->API->Stream->abortStreamExecution($stream_id, $execution_id);
+
+This will cancel all processing and throw away the data parts.
