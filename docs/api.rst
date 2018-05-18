@@ -276,7 +276,7 @@ To delete a user, you just need the ID::
     $client->API->User->deleteUser(123);
 
 Streams
-_______
+-------
 
 Streams allow you to upload large amounts of data in split, compressed, sequential files. Each upload is handled as a single 'execution' - a stream is started, populated, then committed. In the background, Domo will aggregate all the parts you uploaded and produce a final dataset.
 

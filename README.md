@@ -1,8 +1,10 @@
 # domo-php
 
-Unofficial PHP library to interact with the Domo.com APIs.
+Unofficial PHP library to interact with the Domo.com APIs. MIT License.
 
 #### Installation
+
+Ensure you have a valid Domo account, and generate an access token on the [developer.domo](https://developer.domo.com/new-client) site
 
 Install via composer:
 
@@ -18,17 +20,15 @@ Thanks for considering a contribution!
 
 The purpose of this library is to wrap all the Domo endpoints as per the developer documentation, and account for any edge cases. The Helpers are for general-purpose streamlining of common operations (not specific logic for any single industry, framework or application).
 
-Finally, this library is still under active development until it reaches a parity release with the Domo API. If you're having issues, please ask questions in the Spectrum chat (linked above), or lodge a GitHub issue. Pull requests will only be accepted if they're written in a consistent style with the existing code, and maintain parity with the [documented APIs](https://developer.domo.com/docs/api-status/api-status) provided by Domo.
+Pull requests will only be accepted if they're written in a consistent style with the existing code, and maintain parity with the [documented APIs](https://developer.domo.com/docs/api-status/api-status) provided by Domo.
 
 | Capability | Service | Documentation |
 | --- | :---: | :---: |
-| DataSets     | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#datasets) (0.1.0) |
-| Groups       | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#groups) (0.2.0) |
-| Pages        | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#pages) (0.2.0) |
-| Users        | Complete | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#users) (0.2.0) |
-| Activity Log | Working  | [Complete](http://domo-php.readthedocs.io/en/latest/services.html#activity-logs) (0.2.0) |
-| Streams      | Working  | Working (0.2.1) |
+| DataSets     | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#datasets) (0.1.0) |
+| Groups       | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#groups) (0.2.0) |
+| Pages        | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#pages) (0.2.0) |
+| Users        | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html##users) (0.2.0) |
+| Activity Log | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#activity-logs) (0.2.0) |
+| Streams      | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#streams) (0.2.1) |
 
-#### Licensing
-
-MIT
+Last updated: 18 May 2018
