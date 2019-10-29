@@ -2,7 +2,7 @@
     "name": "woganmay/domo-php",
     "description": "Use Domo.com APIs with PHP",
     "require": {
-        "guzzlehttp/guzzle": "6.3.0",
+        "guzzlehttp/guzzle": "^6.3.0",
         "ext-curl": "*"
     },
     "license": "MIT",
