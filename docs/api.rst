@@ -106,7 +106,9 @@ To replace the data in a DataSet, use the ``importDataSet()`` method. This takes
 
     $csv = "2018-01-01,Apples,100.00\n2018-01-02,Apples,200.00";
 
-    $client->API->DataSet->importDataSet($guid, $csv);
+    $append = true; // Whether to append to dataset (default: false)
+
+    $client->API->DataSet->importDataSet($guid, $csv, $append);
 
 There are limits to the amount of data you can load this way. If it's a few thousand records it'll be fine, but for larger loads (tens of thousands upwards), you'll want to use the Stream service.
 

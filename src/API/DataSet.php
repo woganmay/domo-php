@@ -136,13 +136,16 @@ class DataSet
      *
      * @param string $id The GUID to import to
      * @param string $csv CSV data to upload
+     * @param bool $append TRUE to append to dataset instead of replace
      * @return mixed
      * @throws \Exception
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function importDataSet($id, $csv)
+    public function importDataSet($id, $csv, $append = false)
     {
-        $response = $this->Client->WebClient->put("/v1/datasets/$id/data", [
+        $uri = "/v1/datasets/$id/data" . (($append) ? "?updateMethod=APPEND" : "");
+
+        $response = $this->Client->WebClient->put($uri, [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->Client->getToken(),
                 'Content-Type'  => 'text/csv',
