@@ -14,7 +14,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "aaronsinclair\\DomoPHP\\": "src/"
+            "WoganMay\\DomoPHP\\": "src/"
         }
     }
 }
