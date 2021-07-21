@@ -152,6 +152,41 @@ class DataSet
 
         return $response->getStatusCode() == 204;
     }
+    
+    /**
+     * Get Meta Data.
+     *
+     * @param string $id The GUID to export
+     *
+     * @return string The metadata content
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getMetaData($id)
+    {
+        $url = "/v1/datasets/query/execute/$id";
+        $body = [
+            'sql'    => "SELECT * FROM table limit 1"
+        ];
+
+        try
+        {
+            $response = $this->Client->postJSON('/v1/datasets/query/execute/' . $id , $body);
+            unset($response->rows);
+            unset($response->numRows);
+            foreach ($response->columns as $key => $r) {
+                
+                $response->metadata[$key]->columnName = $r;
+            }
+            return $response->metadata;
+        }
+        catch(\GuzzleHttp\Exception\ClientException $ex)
+        {
+            throw new \Exception($ex->getMessage());
+        }
+
+        
+    }
 
     /**
      * @param $id string The DataSet GUID
