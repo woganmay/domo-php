@@ -3,7 +3,7 @@
     "description": "Use Domo.com APIs with PHP",
     "require": {
         "php": "^8",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "*",
         "ext-curl": "*"
     },
     "license": "MIT",
@@ -17,5 +17,8 @@
         "psr-4": {
             "WoganMay\\DomoPHP\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "10.2.3"
     }
 }
