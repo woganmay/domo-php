@@ -60,18 +60,18 @@ The v0.3 release of this library will make a few breaking changes:
 * The client will be refactored to require PHP 8.1 at a minimum, and take advantage of newer language features
 * The DomoPHP client will be updated to implement all of Domo's API methods as of July 2023, which are:
 
-| Capability             |         Status          |
-|------------------------|:-----------------------:|
-| Account API            |    Work in Progress     |
-| Activity Log API       | 1/1 methods implemented |
-| DataSet API            |    Work in Progress     |
-| Embed Token API        |    Work in Progress     |
-| Group API              |    Work in Progress     |
-| Page API               |    Work in Progress     |
-| Projects and Tasks API |    Work in Progress     |
-| Simple API             |    Work in Progress     |
-| Stream API             |    Work in Progress     |
-| User API               | 5/5 methods implemented |
+| Capability             |             Status             |
+|------------------------|:------------------------------:|
+| Account API            |  0/8 methods implemented (0%)  | 
+| Activity Log API       | 1/1 methods implemented (100%) |
+| DataSet API            | 0/13 methods implemented (0%)  |
+| Embed Token API        |  0/2 methods implemented (0%)  |
+| Group API              |  0/8 methods implemented (0%)  |
+| Page API               |  0/9 methods implemented (0%)  |
+| Projects and Tasks API | 0/21 methods implemented (0%)  |
+| Simple API             |  0/2 methods implemented (0%)  |
+| Stream API             | 0/12 methods implemented (0%)  |
+| User API               | 5/5 methods implemented (100%) |
 
 Domo Documentation URL: https://developer.domo.com/portal/8ba9aedad3679-ap-is
 
