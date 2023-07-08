@@ -17,9 +17,7 @@ use WoganMay\DomoPHP\Service\User;
  * DomoPHP Client.
  *
  * The DomoPHP client implements a simple object-based way to access the Domo
- * API.
- *
- * Currently the client is focused on the Data methods.
+ * API from your PHP project.
  *
  * @author     Wogan May <wogan.may@gmail.com>
  * @license    MIT
@@ -120,6 +118,5 @@ class Client
     {
         return $this->user;
     }
-
 
 }

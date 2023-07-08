@@ -72,11 +72,11 @@ class Connector
      *
      * @param string $url The relative URL to post to
      * @param array $body The body array to send
-     * @return object
+     * @return mixed
      * @throws \Exception
      * @throws GuzzleException
      */
-    public function postJSON($url, $body = null)
+    public function postJSON(string $url, array $body = []): mixed
     {
         $request = [
             'headers' => [
@@ -86,22 +86,15 @@ class Connector
             ]
         ];
 
-        if ($body !== null) $request['json'] = $body;
+        if ($body !== []) $request['json'] = $body;
 
         $response = $this->client->post($url, $request);
 
         // Handle server response
-        switch ($response->getStatusCode()) {
-            case 200: // Request successful
-            case 201: // New resource created, OK
-            case 204: // HTTP No Content
-
-                return json_decode($response->getBody());
-
-            default:
-
-                throw new \Exception($response->getBody());
-        }
+        return match ($response->getStatusCode()) {
+            200, 201, 204 => json_decode($response->getBody()),
+            default => throw new \Exception($response->getBody()),
+        };
     }
 
     /**
@@ -110,7 +103,7 @@ class Connector
      * @return object
      * @throws \Exception
      */
-    public function putJSON($url, $body = null)
+    public function putJSON(string $url, array $body = []) : mixed
     {
         $request = [
             'headers' => [
@@ -120,23 +113,15 @@ class Connector
             ]
         ];
 
-        if ($body !== null) $request['json'] = $body;
+        if ($body !== []) $request['json'] = $body;
 
         $response = $this->client->put($url, $request);
 
         // Handle server response
-        switch ($response->getStatusCode()) {
-            case 200: // Request successful
-            case 201: // New resource created, OK
-            case 204: // No Content (blank PUT or DELETE succeeded)
-
-                return json_decode($response->getBody());
-
-            default:
-
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
+        return match ($response->getStatusCode()) {
+            200, 201, 204 => json_decode($response->getBody()),
+            default => throw new \Exception($response->getBody()),
+        };
     }
 
     /**
@@ -178,33 +163,26 @@ class Connector
      * @param string $url The relative URL to get
      * @return object
      * @throws \Exception
+     * @throws GuzzleException
      */
-    public function getJSON($url)
+    public function getJSON(string $url, ?array $params = []) : mixed
     {
-        $response = $this->client->get($url, [
+        $fullUrl = sprintf("%s?%s", $url, http_build_query($params));
+
+        $response = $this->client->get($fullUrl, [
             'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken(),
+                'Authorization' => 'Bearer '. $this->getToken(),
             ],
         ]);
 
         // Handle server response
-        switch ($response->getStatusCode()) {
-            case 200:
-                // Got the resource
-                return json_decode($response->getBody());
-            default:
-                // Unknown result code!
-                throw new \Exception($response->getBody());
-        }
+        return match ($response->getStatusCode()) {
+            200 => json_decode($response->getBody()),
+            default => throw new \Exception($response->getBody()),
+        };
     }
 
-    /**
-     * Delete a resource
-     * @param $url URL to DELETE
-     * @return bool
-     * @throws \Exception
-     */
-    public function delete($url)
+    public function delete($url) : bool
     {
         $response = $this->client->delete($url, [
             'headers' => [
