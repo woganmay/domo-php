@@ -38,9 +38,9 @@ Once required, you'll be able to create a new DomoPHP object as follows:
 
     // (v0.3+ only) Every API has a helper proxy method, as follows:
     $client->account(); // Account API
-    $client->activity(); // Activity Log API
-    $client->dataset(); // DataSet API
-    $client->embed(); // Embed Token API
+    $client->activityLog(); // Activity Log API
+    $client->dataSet(); // DataSet API
+    $client->embedToken(); // Embed Token API
     $client->group(); // Group API
     $client->page(); // Page API
     $client->projects(); // Projects and Tasks API
@@ -60,18 +60,18 @@ The v0.3 release of this library will make a few breaking changes:
 * The client will be refactored to require PHP 8.1 at a minimum, and take advantage of newer language features
 * The DomoPHP client will be updated to implement all of Domo's API methods as of July 2023, which are:
 
-| Capability             |      Status      |
-|------------------------|:----------------:|
-| Account API            | Work in Progress |
-| Activity Log API       | Work in Progress |
-| DataSet API            | Work in Progress |
-| Embed Token API        | Work in Progress |
-| Group API              | Work in Progress |
-| Page API               | Work in Progress |
-| Projects and Tasks API | Work in Progress |
-| Simple API             | Work in Progress |
-| Stream API             | Work in Progress |
-| User API               | Work in Progress |
+| Capability             |         Status          |
+|------------------------|:-----------------------:|
+| Account API            |    Work in Progress     |
+| Activity Log API       | 1/1 methods implemented |
+| DataSet API            |    Work in Progress     |
+| Embed Token API        |    Work in Progress     |
+| Group API              |    Work in Progress     |
+| Page API               |    Work in Progress     |
+| Projects and Tasks API |    Work in Progress     |
+| Simple API             |    Work in Progress     |
+| Stream API             |    Work in Progress     |
+| User API               | 5/5 methods implemented |
 
 Domo Documentation URL: https://developer.domo.com/portal/8ba9aedad3679-ap-is
 
