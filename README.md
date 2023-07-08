@@ -2,7 +2,12 @@
 
 Unofficial PHP library to interact with the Domo.com APIs. MIT License.
 
-#### Installation
+## Note on v0.2.2
+
+This library was last actively maintained in 2018. `v0.2.2` was released on 8 July 2023, and draws a line under how the
+project was run previously.
+
+## Installation
 
 Ensure you have a valid Domo account, and generate an access token on the [developer.domo](https://developer.domo.com/new-client) site
 
@@ -10,25 +15,28 @@ Install via composer:
 
     composer require woganmay/domo-php
     
-Then read the documents on http://domo-php.readthedocs.io/en/latest/
+For v0.2.2, the documentation is at: http://domo-php.readthedocs.io/en/latest/
+For v0.3.0, no documentation is available yet.
 
-If you get stuck, ask for help in the support chat at: https://spectrum.chat/domo-php
-   
-#### Contributing
+## Roadmap for v0.3
 
-Thanks for considering a contribution! 
+The v0.3 release of this library will make a few breaking changes:
 
-The purpose of this library is to wrap all the Domo endpoints as per the developer documentation, and account for any edge cases. The Helpers are for general-purpose streamlining of common operations (not specific logic for any single industry, framework or application).
+* The Helpers will be removed - that functionality is better suited for an independent library
+* The client will be refactored to require PHP 8.1 at a minimum, and take advantage of newer language features
+* The DomoPHP client will be updated to implement all of Domo's API methods as of July 2023, which are:
 
-Pull requests will only be accepted if they're written in a consistent style with the existing code, and maintain parity with the [documented APIs](https://developer.domo.com/docs/api-status/api-status) provided by Domo.
+| Capability |      Status      |
+|------------|:----------------:|
+| Account API   | Work in Progress |
+| Activity Log API   | Work in Progress |
+| DataSet API   | Work in Progress |
+| Embed Token API   | Work in Progress |
+| Group API   | Work in Progress |
+| Page API   | Work in Progress |
+| Projects and Tasks API   | Work in Progress |
+| Simple API   | Work in Progress |
+| Stream API   | Work in Progress |
+| User API   | Work in Progress |
 
-| Capability | Service | Documentation |
-| --- | :---: | :---: |
-| DataSets     | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#datasets) (0.1.0) |
-| Groups       | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#groups) (0.2.0) |
-| Pages        | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#pages) (0.2.0) |
-| Users        | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html##users) (0.2.0) |
-| Activity Log | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#activity-logs) (0.2.0) |
-| Streams      | Complete | [Complete](http://domo-php.readthedocs.io/en/v0.2.1/api.html#streams) (0.2.1) |
-
-Last updated: 18 May 2018
+Domo Documentation URL: https://developer.domo.com/portal/8ba9aedad3679-ap-is

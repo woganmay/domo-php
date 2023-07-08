@@ -2,6 +2,7 @@
     "name": "woganmay/domo-php",
     "description": "Use Domo.com APIs with PHP",
     "require": {
+        "php": "^8",
         "guzzlehttp/guzzle": "^7.0",
         "ext-curl": "*"
     },
