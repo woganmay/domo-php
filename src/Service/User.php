@@ -69,7 +69,7 @@ class User
         {
             // 2028-07-08: Known limitation of the Domo API: the email field is required on this call, even if it is
             // not being changed. As a result, you'll either need to pass in the email when calling this update() method,
-            // but if not, we'll look up the existing user's email before trying the update.
+            // and if not, we'll look up the existing user's email before trying the update.
 
             $existingUser = $this->get($id);
             $update['email'] = $existingUser->email;

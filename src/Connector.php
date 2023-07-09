@@ -97,6 +97,27 @@ class Connector
         };
     }
 
+    public function putCSV(string $url, string $csv) : bool
+    {
+        $request = [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->getToken(),
+                'Content-Type' => 'text/csv',
+                'Accept' => 'application/json'
+            ],
+            'body' => $csv
+        ];
+
+        $response = $this->client->put($url, $request);
+
+        // Handle server response
+        return match ($response->getStatusCode()) {
+            200, 201 => false,
+            204 => true,
+            default => throw new \Exception($response->getBody()),
+        };
+    }
+
     /**
      * @param string $url The relative API endpoint to PUT to
      * @param array $body Array of fields to PUT
@@ -125,37 +146,6 @@ class Connector
     }
 
     /**
-     * @param string $url The URL to PUT to
-     * @param string $csv The CSV content
-     * @return mixed
-     * @throws \Exception
-     */
-    public function putCSV($url, $csv)
-    {
-        $request = [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->getToken(),
-                'Content-Type' => 'text/csv',
-                'Accept' => 'application/json'
-            ],
-            'body' => $csv
-        ];
-
-        $response = $this->client->put($url, $request);
-
-        switch($response->getStatusCode())
-        {
-            case 200: // Request successful
-                return json_decode($response->getBody());
-
-            default:
-                throw new \Exception($response->getBody());
-
-        }
-
-    }
-
-    /**
      * Get JSON from the API
      *
      * Send an array as JSON, and read the response
@@ -178,6 +168,27 @@ class Connector
         // Handle server response
         return match ($response->getStatusCode()) {
             200 => json_decode($response->getBody()),
+            default => throw new \Exception($response->getBody()),
+        };
+    }
+
+    public function getCSV(string $url, array $params = []) : string
+    {
+        $fullUrl = sprintf("%s?%s", $url, http_build_query($params));
+
+        $request = [
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->getToken(),
+                'Content-Type' => 'text/csv',
+                'Accept' => 'application/json'
+            ]
+        ];
+
+        $response = $this->client->get($fullUrl, $request);
+
+        // Handle server response
+        return match ($response->getStatusCode()) {
+            200, 201, 204 => $response->getBody()->getContents(),
             default => throw new \Exception($response->getBody()),
         };
     }
