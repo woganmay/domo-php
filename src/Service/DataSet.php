@@ -89,43 +89,84 @@ class DataSet
         return $this->client->connector()->putCSV("/v1/datasets/{$id}/data", $csv);
     }
 
-    public function export(string $id, bool $includeHeader = true, string $fileName = "export.csv") : string
+    public function export(string $id, bool $includeHeader = true) : string
     {
-        // As of 9 July 2023, this method doesn't actually work on Domo's API. The below code is how it would normally
-        // be called, but until the upstream issue is resolved, this method will only return a blank string.
-        // Q&A URL: https://community-forums.domo.com/main/discussion/59853/does-the-apis-dataset-export-method-work/p1
-        throw new DomoPHPException("DataSet@export");
-
-        // Actual implementation:
-        // return $this->client->connector()->getCSV("/v1/datasets/{$id}/data", Util::trimArrayKeys([
-        //     'includeHeader' => $includeHeader,
-        //     'fileName' => $fileName
-        // ]));
+        return $this->client->connector()->getCSV("/v1/datasets/{$id}/data", Util::trimArrayKeys([
+            'includeHeader' => $includeHeader,
+            'fileName' => "export.csv"
+        ]));
     }
 
-    public function getPDP()
+    public function listPDP(string $id) : array
     {
-        throw new \Exception("Not implemented yet");
+        try {
+            return $this->client->connector()->getJSON("/v1/datasets/{$id}/policies");
+        }
+        catch(ClientException $clientException)
+        {
+            throw new DomoPHPException("DataSet@listPDP", $clientException);
+        }
     }
 
-    public function updatePDP()
+    /**
+     * @param string $id The ID of the DataSet to create the PDP on
+     * @param string $name The user-friendly name of the PDP
+     * @param array $filters An array of filter criteria to apply to the PDP
+     * @param array $users An array of user IDs (integer) to link to the PDP
+     * @param array $groups An array of group IDs (integer) to link to the PDP
+     * @param string $type The type of PDP, defaults to "user"
+     * @return mixed The created PDP
+     * @throws DomoPHPException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function createPDP(string $id, string $name, array $filters = [], array $users = [], array $groups = [], string $type = "user") : mixed
     {
-        throw new \Exception("Not implemented yet");
+        try {
+            return $this->client->connector()->postJSON("/v1/datasets/{$id}/policies", [
+                'name' => $name,
+                'filters' => $filters,
+                'users' => $users,
+                'groups' => $groups,
+                'type' => $type
+            ]);
+        }
+        catch(ClientException $clientException)
+        {
+            throw new DomoPHPException("DataSet@createPDP", $clientException);
+        }
     }
 
-    public function deletePDP()
+    public function getPDP(string $id, int $pdp_id) : mixed
     {
-        throw new \Exception("Not implemented yet");
+        try {
+            return $this->client->connector()->getJSON("/v1/datasets/{$id}/policies/{$pdp_id}");
+        }
+        catch(ClientException $clientException)
+        {
+            throw new DomoPHPException("DataSet@getPDP", $clientException);
+        }
     }
 
-    public function listPDP()
+    public function updatePDP(string $id, int $pdp_id, array $updates = []) : mixed
     {
-        throw new \Exception("Not implemented yet");
+        try {
+            return $this->client->connector()->putJSON("/v1/datasets/{$id}/policies/{$pdp_id}", $updates);
+        }
+        catch(ClientException $clientException)
+        {
+            throw new DomoPHPException("DataSet@updatePDP", $clientException);
+        }
     }
 
-    public function createPDP()
+    public function deletePDP(string $id, int $pdp_id) : bool
     {
-        throw new \Exception("Not implemented yet");
+        try {
+            return $this->client->connector()->delete("/v1/datasets/{$id}/policies/{$pdp_id}");
+        }
+        catch(ClientException $clientException)
+        {
+            throw new DomoPHPException("DataSet@deletePDP", $clientException);
+        }
     }
 
 }

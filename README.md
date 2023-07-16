@@ -38,18 +38,18 @@ the objects, and the way you call the methods will work differently.
 The purpose of this library is to maintain parity with the documented APIs on Domo's Developer site. All client code is
 being re-implemented from the ground up. The roadmap is currently as follows:
 
-| Capability             | Targeted Version |         Status         | Notes                                    |
-|------------------------|------------------|:----------------------:|------------------------------------------|
-| Activity Log API       | v0.3.0           | 1/1 methods (100%) ✅ |                                          |
-| User API               | v0.3.0           | 5/5 methods (100%) ✅ |                                          |
-| DataSet API            | v0.3.0           | 8/13 methods (61%) ⌛  | The "export" method is not supported yet |
-| Simple API             | v0.4.0           | 0/2 methods (0%) ⏸️  |                                          |
-| Stream API             | v0.4.0           | 0/12 methods (0%) ⏸️  |                                          |
-| Account API            | v0.5.0           | 0/8 methods (0%) ⏸️  |                                          |
-| Group API              | v0.5.0           | 0/8 methods (0%) ⏸️  |                                          |
-| Page API               | v0.6.0           | 0/9 methods (0%) ⏸️  |                                          |
-| Embed Token API        | v0.6.0           | 0/2 methods (0%) ⏸️  |                                          |
-| Projects and Tasks API | v0.7.0           | 0/21 methods (0%) ⏸️  |                                          |
+| Capability             | Targeted Version | Status  |
+|------------------------|------------------|---------|
+| Activity Log API       | v0.3.0           | 1/1 ✅   |
+| User API               | v0.3.0           | 5/5 ✅   |
+| DataSet API            | v0.3.0           | 13/13 ✅ |
+| Simple API             | v0.4.0           | 0/2 ⏸️  |
+| Stream API             | v0.4.0           | 0/12 ⏸️ |
+| Account API            | v0.5.0           | 0/8 ⏸️  |
+| Group API              | v0.5.0           | 0/8 ⏸️  |
+| Page API               | v0.6.0           | 0/9 ⏸️  |
+| Embed Token API        | v0.6.0           | 0/2 ⏸️  |
+| Projects and Tasks API | v0.7.0           | 0/21 ⏸️ |
 
 Domo Documentation URL: https://developer.domo.com/portal/8ba9aedad3679-ap-is
 
