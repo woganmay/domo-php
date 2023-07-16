@@ -176,27 +176,166 @@ final class DataSetServiceTest extends TestCase
 
     public function testListDatasetPDP()
     {
-        $this->markTestSkipped("Test not implemented yet");
+        $client = new Client();
+
+        $hash = uniqid();
+
+        // Create a new dataset, so we have a target for listing the PDP
+        $dataset = $client->dataSet()->create("Test ListDatasetPDP {$hash}", [ 'Field' => 'STRING' ]);
+
+        // Should now be able to get the PDP on it (an empty array)
+        $pdp = $client->dataSet()->listPDP($dataset->id);
+
+        // A new dataset should have 1x PDP on it, a default of "All Rows" that has no filters or users
+        // attached to it.
+        $this->assertIsArray($pdp);
+        $this->assertEquals("All Rows", $pdp[0]->name);
+        $this->assertEmpty($pdp[0]->filters);
+        $this->assertEmpty($pdp[0]->users);
+
     }
 
     public function testCreateDatasetPDP()
     {
-        $this->markTestSkipped("Test not implemented yet");
+        $client = new Client();
+
+        $hash = uniqid();
+
+        // Create a new dataset, so we have a target for creating the PDP
+        $dataset = $client->dataSet()->create("Test CreateDatasetPDP {$hash}", [ 'Field' => 'STRING' ]);
+
+        // The PDP system adds filters to fields, but Domo doesn't seem to understand that fields are present
+        // if the dataset is not populated, so let's add some data to it.
+        $client->dataSet()->import($dataset->id, "Field\nRow 1\nRow 2\nRow 3");
+
+        // Give Domo a chance to run whatever internal processes are required
+        sleep(10);
+
+        // Now, attach a PDP to the first available user
+        $firstUser = $client->user()->list(1);
+
+        $this->assertEquals(865213262, $firstUser[0]->id);
+
+        $users = [ $firstUser[0]->id ];
+
+        // Allow the user to only see data where 'Field' = 'Row 1'
+        $filters = [[
+            'column' => 'Field',
+            'operator' => 'EQUALS',
+            'values' => [
+                'Row 1'
+            ]
+        ]];
+
+        $newPDP = $client->dataSet()->createPDP($dataset->id, "Test PDP #1 - {$hash}", $filters, $users);
+
+        // If we have a PDP object with at least 1 user in it, we're good
+        $this->assertEquals("Test PDP #1 - {$hash}", $newPDP->name);
+        $this->assertNotEmpty($newPDP->users);
+
     }
 
     public function testGetDatasetPDP()
     {
-        $this->markTestSkipped("Test not implemented yet");
+
+        $client = new Client();
+
+        $hash = uniqid();
+
+        // Create a new dataset, so we have a target for getting the PDP
+        $dataset = $client->dataSet()->create("Test GetDatasetPDP {$hash}", [ 'Field' => 'STRING' ]);
+        $client->dataSet()->import($dataset->id, "Field\nRow 1\nRow 2\nRow 3");
+
+        // Give Domo a chance to run whatever internal processes are required
+        sleep(10);
+
+        // Now, attach a PDP to the first available user
+        $firstUser = $client->user()->list(1);
+        $filters = [['column' => 'Field', 'operator' => 'EQUALS', 'values' => [ 'Row 1' ] ]];
+        $newPDP = $client->dataSet()->createPDP($dataset->id, "Test PDP #1 - {$hash}", $filters, [ $firstUser[0]->id ]);
+
+        // Now try the GET endpoint and ensure we get the same value back
+        $retrievedPDP = $client->dataSet()->getPDP($dataset->id, $newPDP->id);
+
+        $this->assertEquals($newPDP->id, $retrievedPDP->id);
+
     }
 
     public function testUpdateDatasetPDP()
     {
-        $this->markTestSkipped("Test not implemented yet");
+        $client = new Client();
+
+        $hash = uniqid();
+
+        // Create a new dataset, so we have a target for getting the PDP
+        $dataset = $client->dataSet()->create("Test UpdateDatasetPDP {$hash}", [ 'Field' => 'STRING' ]);
+        $client->dataSet()->import($dataset->id, "Field\nRow 1\nRow 2\nRow 3");
+
+        // Give Domo a chance to run whatever internal processes are required
+        sleep(10);
+
+        // Now, attach a PDP to the first available user
+        $firstUser = $client->user()->list(1);
+        $secondUser = $client->user()->list(1, 1);
+        $filters = [['column' => 'Field', 'operator' => 'EQUALS', 'values' => [ 'Row 1' ] ]];
+        $newPDP = $client->dataSet()->createPDP($dataset->id, "Test PDP #1 - {$hash}", $filters, [ $firstUser[0]->id ]);
+
+        // Update the existing PDP to modify everything about it:
+        $updates = [
+
+            // Rename the PDP
+            'name' => "Test PDP #1-renamed - {$hash}",
+
+            // Change the only filter on it to check for Field=Row 2 instead
+            'filters' => [['column' => 'Field', 'operator' => 'EQUALS', 'values' => [ 'Row 2' ] ]],
+
+            // Update the user to someone totally different
+            'users' => [ $secondUser[0]->id ]
+
+        ];
+
+        // Do the actual update
+        $client->dataSet()->updatePDP($dataset->id, $newPDP->id, $updates);
+
+        // Retrieve the PDP from scratch for comparison
+        $retrievedPDP = $client->dataSet()->getPDP($dataset->id, $newPDP->id);
+
+        // Ensure the PDP has updated
+        $this->assertEquals("Test PDP #1-renamed - {$hash}", $retrievedPDP->name);
+        $this->assertEquals("Row 2", $retrievedPDP->filters[0]->values[0]);
+        $this->assertEquals($secondUser[0]->id, $retrievedPDP->users[0]);
+
     }
 
     public function testDeleteDatasetPDP()
     {
-        $this->markTestSkipped("Test not implemented yet");
+        $client = new Client();
+
+        $hash = uniqid();
+
+        // Create a new dataset, so we have a target for getting the PDP
+        $dataset = $client->dataSet()->create("Test DeleteDatasetPDP {$hash}", [ 'Field' => 'STRING' ]);
+        $client->dataSet()->import($dataset->id, "Field\nRow 1\nRow 2\nRow 3");
+
+        // Give Domo a chance to run whatever internal processes are required
+        sleep(10);
+
+        // Now, attach a PDP to the first available user
+        $firstUser = $client->user()->list(1);
+        $filters = [['column' => 'Field', 'operator' => 'EQUALS', 'values' => [ 'Row 1' ] ]];
+        $newPDP = $client->dataSet()->createPDP($dataset->id, "Test PDP #1 - {$hash}", $filters, [ $firstUser[0]->id ]);
+
+        // Verify it's been created by listing out the policies on the DataSet - there should be 2:
+        $pdpCheck1 = $client->dataSet()->listPDP($dataset->id);
+        $this->assertEquals(2, count($pdpCheck1));
+
+        // Now let's delete ours
+        $client->dataSet()->deletePDP($dataset->id, $newPDP->id);
+
+        // And confirm it's gone, by re-listing and only seeing 1 PDP on the dataset
+        $pdpCheck2 = $client->dataSet()->listPDP($dataset->id);
+        $this->assertEquals(1, count($pdpCheck2));
+
     }
 
 }

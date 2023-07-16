@@ -42,7 +42,7 @@ being re-implemented from the ground up. The roadmap is currently as follows:
 |------------------------|------------------|---------|
 | Activity Log API       | v0.3.0           | 1/1 ✅   |
 | User API               | v0.3.0           | 5/5 ✅   |
-| DataSet API            | v0.3.0           | 8/13 ⌛  |
+| DataSet API            | v0.3.0           | 13/13 ✅ |
 | Simple API             | v0.4.0           | 0/2 ⏸️  |
 | Stream API             | v0.4.0           | 0/12 ⏸️ |
 | Account API            | v0.5.0           | 0/8 ⏸️  |
