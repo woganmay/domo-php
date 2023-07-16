@@ -151,9 +151,37 @@ final class DataSetServiceTest extends TestCase
 
     public function testExportDataset()
     {
-        // As of 9 July 2023, this method returns a `406 Not Acceptable` response regardless of how it is queried.
-        // Q&A URL: https://community-forums.domo.com/main/discussion/59853/does-the-apis-dataset-export-method-work/p1
-        $this->markTestSkipped("API method not supported by Domo.com");
+        $client = new Client();
+
+        $hash = uniqid();
+
+        $csv = "Field\nRow 1\nRow 2\nRow 3";
+
+        // Create a new dataset, so we have a target for exporting
+        $dataset = $client->dataSet()->create("Test ExportDataset {$hash}", [ 'Field' => 'STRING' ]);
+        $client->dataSet()->import($dataset->id, $csv);
+
+        // Give Domo a chance to run whatever internal processes are required
+        sleep(10);
+
+        // We should now be able to export this
+        $exportResult = $client->dataSet()->export($dataset->id);
+
+        // Domo adds a trailing newline to exported data, so comparing the
+        // trim() value on both sides should work. In addition, this also
+        // validates that the header is present in the downloaded file.
+        $this->assertEquals(trim($csv), trim($exportResult));
+
+    }
+
+    public function testListDatasetPDP()
+    {
+        $this->markTestSkipped("Test not implemented yet");
+    }
+
+    public function testCreateDatasetPDP()
+    {
+        $this->markTestSkipped("Test not implemented yet");
     }
 
     public function testGetDatasetPDP()
@@ -171,13 +199,4 @@ final class DataSetServiceTest extends TestCase
         $this->markTestSkipped("Test not implemented yet");
     }
 
-    public function testListDatasetPDP()
-    {
-        $this->markTestSkipped("Test not implemented yet");
-    }
-
-    public function testCreateDatasetPDP()
-    {
-        $this->markTestSkipped("Test not implemented yet");
-    }
 }

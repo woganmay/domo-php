@@ -89,18 +89,12 @@ class DataSet
         return $this->client->connector()->putCSV("/v1/datasets/{$id}/data", $csv);
     }
 
-    public function export(string $id, bool $includeHeader = true, string $fileName = "export.csv") : string
+    public function export(string $id, bool $includeHeader = true) : string
     {
-        // As of 9 July 2023, this method doesn't actually work on Domo's API. The below code is how it would normally
-        // be called, but until the upstream issue is resolved, this method will only return a blank string.
-        // Q&A URL: https://community-forums.domo.com/main/discussion/59853/does-the-apis-dataset-export-method-work/p1
-        throw new DomoPHPException("DataSet@export");
-
-        // Actual implementation:
-        // return $this->client->connector()->getCSV("/v1/datasets/{$id}/data", Util::trimArrayKeys([
-        //     'includeHeader' => $includeHeader,
-        //     'fileName' => $fileName
-        // ]));
+        return $this->client->connector()->getCSV("/v1/datasets/{$id}/data", Util::trimArrayKeys([
+            'includeHeader' => $includeHeader,
+            'fileName' => "export.csv"
+        ]));
     }
 
     public function getPDP()

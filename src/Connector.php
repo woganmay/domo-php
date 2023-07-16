@@ -179,8 +179,8 @@ class Connector
         $request = [
             'headers' => [
                 'Authorization' => 'Bearer '.$this->getToken(),
-                'Content-Type' => 'text/csv',
-                'Accept' => 'application/json'
+                'Content-Type' => 'application/json',
+                'Accept' => 'text/csv'
             ]
         ];
 
